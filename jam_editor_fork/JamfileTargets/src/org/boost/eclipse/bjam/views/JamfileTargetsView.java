@@ -171,19 +171,17 @@ public class JamfileTargetsView extends ViewPart {
         buildAction = new MakeTargetAction(viewer, dynamicOptions);
         buildAction.setText("build");
         buildAction.setToolTipText("update target as needed");
-        buildAction.setImageDescriptor(MakeUIImages.DESC_BUILD_TARGET);
+        buildAction.setImageDescriptor(MakeUIImages.getImageDescriptor(MakeUIImages.IMG_OBJS_TARGET));
 
         rebuildAction = new MakeTargetAction(viewer, "-a", dynamicOptions);
         rebuildAction.setText("rebuild");
         rebuildAction.setToolTipText("forces a rebuild of all files");
-        MakeUIImages.setImageDescriptors(rebuildAction, "tool16",
-                MakeUIImages.IMG_TOOLS_MAKE_TARGET_BUILD);
+        rebuildAction.setImageDescriptor(MakeUIImages.getImageDescriptor(MakeUIImages.IMG_DTOOL_TARGET_BUILD));
 
         cleanAction = new MakeTargetAction(viewer, "--clean", dynamicOptions);
         cleanAction.setText("clean");
         cleanAction.setToolTipText("clean this target");
-        MakeUIImages.setImageDescriptors(cleanAction, "tool16",
-                MakeUIImages.IMG_TOOLS_MAKE_TARGET_DELETE);
+        cleanAction.setImageDescriptor(MakeUIImages.getImageDescriptor(MakeUIImages.IMG_DTOOL_TARGET_DELETE));
     }
 
     public String getOptions() {

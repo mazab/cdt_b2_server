@@ -5,12 +5,8 @@
          point="org.eclipse.cdt.managedbuilder.core.buildProperties">
            <propertyValue 
               	property="org.eclipse.cdt.build.core.buildType" 
-              	id="org.eclipse.cdt.boost.build.buildType.debug" 
-              	name="Debug"/>
-           <propertyValue 
-              	property="org.eclipse.cdt.build.core.buildType" 
-              	id="org.eclipse.cdt.boost.build.buildType.release" 
-              	name="Release"/>
+              	id="org.eclipse.cdt.boost.build.buildType.default" 
+              	name="Default"/>
            <propertyValue 
             	property="org.eclipse.cdt.build.core.buildArtefactType" 
             	id="org.eclipse.cdt.boost.build.core.buildArtefactType.b2" 
@@ -23,32 +19,31 @@
             id="org.eclipse.cdt.build.core.projectType"
             isAbstract="false">
          <configuration
-               buildProperties="org.eclipse.cdt.boost.build.buildType.debug"
+               buildProperties="org.eclipse.cdt.boost.build.buildType.default"
                errorParsers="org.eclipse.cdt.boost.build.core.internal.language.B2ErrorParser"
-               id="org.eclipse.cdt.boost.debug"
+               id="org.eclipse.cdt.boost.default"
                languageSettingsProviders="org.eclipse.cdt.ui.UserLanguageSettingsProvider;org.eclipse.cdt.boost.build.core.internal.language.B2LanguageSettingsProvider"
-               name="Debug">
+               name="Default">
             <toolChain
-                  id="org.eclipse.cdt.boost.build.core.toolchain.debug"
+                  id="org.eclipse.cdt.boost.build.core.toolchain"
                   isAbstract="false"
                   name="Boost Builder Toolchain">
                <tool
-                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gcc.debug"
+                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gcc"
                      isAbstract="false"
                      superClass="cdt.managedbuild.tool.gnu.c.compiler">
                </tool>
                <tool
-                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gpp.debug"
+                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gpp"
                      isAbstract="false"
                      superClass="cdt.managedbuild.tool.gnu.cpp.compiler">
                </tool>
                <builder
-                     arguments="debug"
                      autoBuildTarget="auto"
                      buildRunner="org.eclipse.cdt.boost.build.core.internal.builder.B2BuildRunner"
                      cleanBuildTarget="clean"
                      command="b2 --server"
-                     id="org.eclipse.cdt.boost.build.core.builder.debug"
+                     id="org.eclipse.cdt.boost.build.core.builder"
                      incrementalBuildTarget="inc"
                      isAbstract="false"
                      isVariableCaseSensitive="false"
@@ -62,42 +57,6 @@
                      id="org.eclipse.cdt.boost.build.core.targetPlatform"
                      isAbstract="false"
                      name="B2 Target"/>
-            </toolChain>
-         </configuration>
-         <configuration
-               buildProperties="org.eclipse.cdt.boost.build.buildType.release"
-               errorParsers="org.eclipse.cdt.boost.build.core.internal.language.B2ErrorParser"
-               id="org.eclipse.cdt.boost.release"
-               languageSettingsProviders="org.eclipse.cdt.ui.UserLanguageSettingsProvider;org.eclipse.cdt.boost.build.core.internal.language.B2LanguageSettingsProvider"
-               name="Release">
-            <toolChain
-                  id="org.eclipse.cdt.boost.build.core.toolchain.release"
-                  isAbstract="false"
-                  name="Boost Builder Toolchain">
-               <tool
-                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gcc.release"
-                     isAbstract="false"
-                     superClass="cdt.managedbuild.tool.gnu.c.compiler">
-               </tool>
-               <tool
-                     id="org.eclipse.cdt.boost.build.core.toolchain.tool.gpp.release"
-                     isAbstract="false"
-                     superClass="cdt.managedbuild.tool.gnu.cpp.compiler">
-               </tool>
-               <builder
-                     arguments="release"
-                     autoBuildTarget="auto"
-                     buildRunner="org.eclipse.cdt.boost.build.core.internal.builder.B2BuildRunner"
-                     cleanBuildTarget="clean"
-                     command="b2 --server"
-                     id="org.eclipse.cdt.boost.build.core.builder.release"
-                     incrementalBuildTarget="inc"
-                     isAbstract="false"
-                     isVariableCaseSensitive="false"
-                     name="Boost Builder"
-                     parallelBuildOn="false"
-                     supportsManagedBuild="false">
-               </builder>
             </toolChain>
          </configuration>
       </projectType>

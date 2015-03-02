@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+Copyright Frank Birbacher 2008
+
+Use, modification and distribution are subject to the Boost Software License,
+Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt).
+-->
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="BJam"
+            id="BJam">
+      </category>
+      <view
+            name="Jamfile Targets View"
+            icon="icons/favicon.png"
+            category="BJam"
+            class="org.boost.eclipse.bjam.views.JamfileTargetsView"
+            id="org.boost.eclipse.bjam.views.JamfileTargetsView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.boost.eclipse.bjam.views.JamfileTargetsView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

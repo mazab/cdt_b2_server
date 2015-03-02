@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/BJamIntegration_1.0.0.200908081625.jar" id="BJamIntegration" version="1.0.0.200908081625">
+      <category name="BuildTools"/>
+   </feature>
+   <category-def name="BuildTools" label="Build Tools">
+      <description>
+         Tools used to compile and link software from source code to executable form.
+      </description>
+   </category-def>
+</site>

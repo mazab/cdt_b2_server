@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JamfileTargets Plug-in
+Bundle-SymbolicName: JamfileTargets; singleton:=true
+Bundle-Version: 1.0.0
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.cdt.make.core,
+ org.eclipse.cdt.make.ui
+Export-Package: org.boost.eclipse.bjam.system,
+ org.boost.eclipse.bjam.views
+Bundle-Vendor: Boost.org

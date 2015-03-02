@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Jamfile Editor"
+            extensions="jam"
+            filenames="Jamfile,Jamfile.v2,Jamroot"
+            icon="icons/favicon.png"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="org.boost.eclipse.bjam.editor.JamfileEditor"
+            id="org.boost.eclipse.bjam.editor.JamfileEditor">
+      </editor>
+   </extension>
+
+</plugin>

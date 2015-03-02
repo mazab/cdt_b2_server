@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: B2 Support - Linux X86_64
+Bundle-SymbolicName: org.eclipse.cdt.boost.build.core.linux.x86_64
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Mentor Graphics
+Eclipse-PlatformFilter: (&(osgi.os=linux)(osgi.arch=x86_64))

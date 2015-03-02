@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.cdt.core.templates">
+      <template
+            id="org.eclipse.cdt.boost.build.ui.templates.emptyProject"
+            location="templates/EmptyProject/template.xml"
+            projectType="org.eclipse.cdt.build.core.projectType">
+      </template>
+      <template
+            filterPattern=".*g\+\+"
+            id="org.eclipse.cdt.boost.build.ui.templates.helloProject"
+            location="templates/HelloProject/template.xml"
+            projectType="org.eclipse.cdt.build.core.projectType">
+      </template>
+      <template
+            filterPattern=".*g\+\+"
+            id="org.eclipse.cdt.boost.build.ui.templates.libProject"
+            location="templates/LibraryProject/template.xml"
+            projectType="org.eclipse.cdt.build.core.projectType">
+      </template>
+   </extension>
+   <extension
+         point="org.eclipse.cdt.ui.CDTWizard">
+      <wizard
+            class="org.eclipse.cdt.boost.build.ui.internal.wizards.B2BuildWizard"></wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.eclipse.cdt.boost.build.ui.B2PropertiesPage"
+            id="org.eclipse.cdt.boost.build.ui.b2properties"
+            name="B2 Settings">
+         <enabledWhen>
+             <test property="org.eclipse.core.resources.projectNature" value="org.eclipse.cdt.boost.build.core.b2Nature"/>
+         </enabledWhen>
+      </page>
+   </extension>
+</plugin>

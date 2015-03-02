@@ -1,0 +1,36 @@
+
+import type ;
+import generators ;
+import feature ;
+import common ;
+import testing ;
+import "class" : new ;
+
+type.register ANDREW_TEST ;
+
+class andrew-test-generator : generator
+{
+    import "class" : new ;
+
+    rule __init__ ( * : * )
+    {
+        generator.__init__ $(1) : $(2) : $(3) : $(4) : $(5) : $(6) : $(7) : $(8) : $(9) ;
+    }
+
+    rule run ( project name ? : property-set : sources * )
+    {
+        local type ;
+        if [ $(property-set).get <target-os> ] = linux
+        {
+            type = RUN ;
+        } 
+        else
+        {
+            type = EXE ;
+        }
+        return [ generators.construct $(project) $(name) : $(type) : $(property-set) : $(sources) ] ;
+    }
+}
+
+generators.register [ new andrew-test-generator andrew.test : : ANDREW_TEST ] ;
+

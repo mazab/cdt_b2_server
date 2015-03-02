@@ -50,7 +50,7 @@ public class B2Process {
 		if (b2BinPath == null) {
 			String bundleName = BoostBuildPlugin.PLUGIN_ID + "." + Platform.getOS() + "." + Platform.getOSArch();
 			Bundle bundle = Platform.getBundle(bundleName);
-			URL url = FileLocator.find(bundle, new Path("/os/bin/" + getPlatformSpecificB2FileName()), null);
+			URL url = FileLocator.find(bundle, new Path("/os/exec/" + getPlatformSpecificB2FileName()), null);
 			if (url != null) {
 				try {
 					url = FileLocator.resolve(url);

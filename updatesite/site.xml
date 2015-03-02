@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/BJamIntegration_1.0.0.qualifier.jar" id="BJamIntegration" version="1.0.0.qualifier">
+      <category name="b2_integration"/>
+   </feature>
+   <feature url="features/org.eclipse.cdt.boost.build.feature_1.0.0.qualifier.jar" id="org.eclipse.cdt.boost.build.feature" version="1.0.0.qualifier">
+      <category name="b2_integration"/>
+   </feature>
+   <category-def name="b2_integration" label="B2 Integration">
+      <description>
+         CDT support for B2-Server
+      </description>
+   </category-def>
+</site>

@@ -8,7 +8,6 @@
 package org.eclipse.cdt.boost.build.core.internal.builder;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -20,9 +19,12 @@ import org.eclipse.cdt.boost.build.core.internal.model.Request;
 import org.eclipse.cdt.boost.build.core.internal.model.Response;
 import org.eclipse.cdt.boost.build.core.internal.model.Session;
 import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.osgi.framework.Bundle;
 
@@ -64,15 +66,22 @@ public class B2Process {
 		return b2BinPath;
 	}
 
-	public static B2Process invokeProcess(String dir) {
-		String[] allArgs = new String[DAEMON_MODE_ARGS.length + 1];
-		System.arraycopy(DAEMON_MODE_ARGS, 0, allArgs, 1, DAEMON_MODE_ARGS.length);
-		allArgs[0] = getB2BinPath();
+	public static B2Process invokeProcess(IProject project) {
 		try {
-			Process process = Runtime.getRuntime().exec(allArgs, null, new File(dir));
+			B2ProcessLauncher rcl = new B2ProcessLauncher();
+			String b2Bin;
+			IPath path;
+			if (project.getLocation() == null) { // Remote project
+				b2Bin = B2_BIN_NAME;
+				path = project.getFullPath();
+			} else {
+				b2Bin = getB2BinPath();
+				path = project.getLocation();
+			}
+			Process process = rcl.execute(new Path(b2Bin), DAEMON_MODE_ARGS, null, project, path, null);
 			B2Process b2 = new B2Process(process);
 			return b2;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			CCorePlugin.log(e);
 		}
 		return null;
@@ -84,9 +93,12 @@ public class B2Process {
 	 * @return
 	 */
 	private static boolean isValidB2OutputLine(String line) {
-		Object obj = null;
+		JSONObject obj = null;
 		try {
-			obj = JSONValue.parse(line);
+			obj = (JSONObject) JSONValue.parse(line);
+			if ("request".equals(obj.get("type"))) {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}

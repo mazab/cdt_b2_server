@@ -26,7 +26,7 @@ import org.eclipse.jface.wizard.IWizard;
 
 public class B2BuildWizard extends AbstractCWizard {
 	public static final String BOOST_BUILD_PROJECT_TYPE = "org.eclipse.cdt.build.core.projectType";
-	public static final String BOOST_BUILD_TOOLCHAIN_ID = "org.eclipse.cdt.boost.build.core.toolchain.debug"; //$NON-NLS-1$
+	public static final String BOOST_BUILD_TOOLCHAIN_ID = "org.eclipse.cdt.boost.build.core.toolchain"; //$NON-NLS-1$
 
 	@Override
 	public EntryDescriptor[] createItems(boolean supportedOnly, IWizard wizard) {

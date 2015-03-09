@@ -17,16 +17,15 @@ import org.eclipse.cdt.boost.build.core.internal.model.Response;
 import org.eclipse.cdt.core.CCorePlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.json.simple.JSONArray;
 
 public class B2ProcessManager {
 	private static final Map<String, B2Process> B2_PROCESS_HOLDER = new HashMap<>();
 	private static final Map<String, Options> B2_PROPERTIES_HOLDER = new HashMap<>();
 
-	private static B2Process createAndPersistBuilderProcess(IPath location) {
+	private static B2Process createAndPersistBuilderProcess(IProject project) {
 		try {
-			B2Process process = B2Process.invokeProcess(location.toOSString());
-			B2_PROCESS_HOLDER.put(location.toOSString(), process);
+			B2Process process = B2Process.invokeProcess(project);
+			B2_PROCESS_HOLDER.put(project.getFullPath().toOSString(), process);
 			return process;
 		} catch (Exception e) {
 			CCorePlugin.log(e);
@@ -35,10 +34,10 @@ public class B2ProcessManager {
 	}
 
 	public static B2Process getBuilderProcess(IProject project) {
-		IPath location = project.getLocation();
+		IPath location = project.getFullPath();
 		String locationStr = location.toOSString();
 		return B2_PROCESS_HOLDER.containsKey(locationStr) ? B2_PROCESS_HOLDER.get(locationStr)
-				: createAndPersistBuilderProcess(location);
+				: createAndPersistBuilderProcess(project);
 	}
 
 	public static Options getBuildProperties(IProject project) {

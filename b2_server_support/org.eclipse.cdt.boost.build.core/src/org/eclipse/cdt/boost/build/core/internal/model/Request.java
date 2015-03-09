@@ -30,7 +30,6 @@ public class Request {
 		fTargets = targets;
 		fProperties = properties;
 		fPath = path;
-
 	}
 
 	public boolean isRequireResopnse() {
@@ -48,6 +47,7 @@ public class Request {
 			request.put("properties", fProperties);
 		if (fPath != null)
 			request.put("path", fPath);
+		request.put("redo", true); // to activate re-build //TODO proper design
 		try {
 			return new JSONObject(request).toString();
 		} catch (Exception e) {

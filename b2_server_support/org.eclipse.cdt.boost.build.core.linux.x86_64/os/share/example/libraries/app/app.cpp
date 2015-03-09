@@ -11,6 +11,5 @@
 
 int main()
 {
-    int a;
     foo();
 }

@@ -192,31 +192,6 @@ public class B2LanguageSettingsProvider extends LanguageSettingsSerializableProv
 	}
 
 	/**
-	 * Determine resource in the workspace corresponding to the parsed resource
-	 * name.
-	 */
-	private IResource findResource(String parsedResourceName) {
-		if (parsedResourceName == null || parsedResourceName.isEmpty()) {
-			return null;
-		}
-
-		IResource sourceFile = null;
-
-		// try to find absolute path in the workspace
-		if (sourceFile == null && new Path(parsedResourceName).isAbsolute()) {
-			URI uri = org.eclipse.core.filesystem.URIUtil.toURI(parsedResourceName);
-			sourceFile = findFileForLocationURI(uri, fProject, /* checkExistence */true);
-		}
-
-		// try path relative to the project
-		if (sourceFile == null && fProject != null) {
-			sourceFile = fProject.findMember(parsedResourceName);
-		}
-
-		return sourceFile;
-	}
-
-	/**
 	 * Find file resource in the workspace for a given URI with a preference for
 	 * the resource to reside in the given project.
 	 */
@@ -305,6 +280,16 @@ public class B2LanguageSettingsProvider extends LanguageSettingsSerializableProv
 			// careful not to use Path here but 'pathStr' as String as we want
 			// to properly navigate symlinks
 			uri = resolvePathFromBaseLocation(pathStr, baseLocation);
+		} else {
+			// location on a remote file-system
+			IPath path = new Path(pathStr); // use canonicalized path here, in particular replace all '\' with '/' for Windows paths
+			URI remoteUri = efsProviderDefault.append(baseURI, path.toString());
+			if (remoteUri != null) {
+				String localPath = efsProviderDefault.getMappedPath(remoteUri);
+				if (localPath != null) {
+					uri = org.eclipse.core.filesystem.URIUtil.toURI(localPath);
+				}
+			}
 		}
 
 		if (uri == null) {

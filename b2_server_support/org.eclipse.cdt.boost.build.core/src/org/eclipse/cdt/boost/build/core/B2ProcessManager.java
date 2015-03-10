@@ -41,7 +41,7 @@ public class B2ProcessManager {
 	}
 
 	public static Options getBuildProperties(IProject project) {
-		IPath location = project.getLocation();
+		IPath location = project.getFullPath();
 		String locationStr = location.toOSString();
 		if (B2_PROPERTIES_HOLDER.containsKey(locationStr))
 			return B2_PROPERTIES_HOLDER.get(locationStr);

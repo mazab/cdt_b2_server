@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.cdt.boost.build.core.internal.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,13 @@ public class Response {
 		JSONObject responseObj = (JSONObject) JSONValue.parse(response);
 		if ("response".equals(responseObj.get("type"))) {
 			if (responseObj.containsKey("response")) {
-				fResponse = (List<Map<String, Object>>) responseObj.get("response");
+				Object r = responseObj.get("response");
+				if (r instanceof List) {
+					fResponse = (List<Map<String, Object>>) responseObj.get("response");
+				} else {
+					fResponse = new ArrayList<Map<String, Object>>();
+					fResponse.add((Map<String, Object>) r);
+				}
 			}
 		}
 	}

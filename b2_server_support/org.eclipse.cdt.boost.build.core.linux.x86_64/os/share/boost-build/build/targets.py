@@ -83,6 +83,7 @@ from b2.exceptions import *
 from b2.util.sequence import unique
 from b2.util import path, bjam_signature
 from b2.build.errors import user_error_checkpoint
+from toolset import Toolset
 
 import b2.build.build_request as build_request
 
@@ -197,7 +198,7 @@ class TargetRegistry:
             for t in self.targets_being_built_.values() + [main_target_instance]:
                 names.append (t.full_name())
             
-            get_manager().errors()("Recursion in main target references\n")
+            get_manager().errors()("Recursion in main target references\n" + str(names))
         
         self.targets_being_built_[id(main_target_instance)] = main_target_instance
 
@@ -237,7 +238,7 @@ class TargetRegistry:
         self.targets_ = self.targets_[:-1]
 
     def current(self):
-        return self.targets_[0]
+        return self.targets_[-1] if self.targets_ else None
 
 
 class GenerateResult:
@@ -708,20 +709,22 @@ class MainTarget (AbstractTarget):
             longest requirements set.
             Returns the result of calling 'generate' on that alternative.
         """
-        self.manager_.targets ().start_building (self)
+        try:
+            self.manager_.targets ().start_building (self)
 
-        # We want composite properties in build request act as if
-        # all the properties it expands too are explicitly specified.
-        ps = ps.expand ()
+            # We want composite properties in build request act as if
+            # all the properties it expands too are explicitly specified.
+            ps = ps.expand ()
         
-        all_property_sets = self.apply_default_build (ps)
+            all_property_sets = self.apply_default_build (ps)
 
-        result = GenerateResult ()
+            result = GenerateResult ()
         
-        for p in all_property_sets:
-            result.extend (self.__generate_really (p))
+            for p in all_property_sets:
+                result.extend (self.__generate_really (p))
 
-        self.manager_.targets ().end_building (self)
+        finally:
+            self.manager_.targets ().end_building (self)
 
         return result
         
@@ -1013,6 +1016,9 @@ class BasicTarget (AbstractTarget):
             self.manager().errors("Invalid value of the 'what' parameter")
 
     def __common_properties2(self, build_request, requirements):
+
+        build_request = Toolset.select(build_request)
+
         # This guarantees that default properties are present
         # in result, unless they are overrided by some requirement.
         # TODO: There is possibility that we've added <foo>bar, which is composite
@@ -1101,7 +1107,11 @@ class BasicTarget (AbstractTarget):
         """
         self.manager_.errors().push_user_context(
             "Generating target " + self.full_name(), self.user_context_)
-        
+
+        t = self.manager().message("Generating metatarget '%s'" % self.name_)
+
+        self.manager().message("Build request: '%s'" % str (ps.raw ()), parent = t)
+
         if self.manager().targets().logging():
             self.manager().targets().log(
                 "Building target '%s'" % self.name_)

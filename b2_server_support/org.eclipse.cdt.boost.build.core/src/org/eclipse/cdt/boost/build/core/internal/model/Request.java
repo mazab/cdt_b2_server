@@ -18,6 +18,7 @@ public class Request {
 	public static final String REQUEST_TYPE_BUILD = "build";
 	public static final String REQUEST_TYPE_CLEAN_BUILD = "clean-build";
 	public static final String REQUEST_TYPE_GET = "get";
+	public static final String REQUEST_TYPE_GET_APPLICABILITY = "get-applicability";
 	public static final String REQUEST_TYPE_CANCEL = "cancel";
 
 	private String fRequestType;
@@ -33,7 +34,7 @@ public class Request {
 	}
 
 	public boolean isRequireResopnse() {
-		return (REQUEST_TYPE_GET.equals(fRequestType));
+		return (REQUEST_TYPE_GET.equals(fRequestType) || REQUEST_TYPE_GET_APPLICABILITY.equals(fRequestType));
 	}
 
 	@Override

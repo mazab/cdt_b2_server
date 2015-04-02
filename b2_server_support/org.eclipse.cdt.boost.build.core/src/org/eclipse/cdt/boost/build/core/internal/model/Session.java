@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class Session {
 	private Request fRequest;
-	private Map<Long, Action> fActions = new HashMap<>();
-	private List<Long> fOrderedActionsTokens = new ArrayList<>();
-	private Long fLastActionToken;
+	private Map<Object, Action> fActions = new HashMap<>();
+	private List<Object> fOrderedActionsTokens = new ArrayList<>();
+	private Object fLastActionToken;
 	private Event fFinished;
 
 	public Request getRequest() {
@@ -27,11 +27,11 @@ public class Session {
 		return fFinished;
 	}
 
-	public Action getAction(Long token) {
+	public Action getAction(Object token) {
 		return fActions.get(token);
 	}
 
-	public List<Long> getOrderedActionsTokensList() {
+	public List<Object> getOrderedActionsTokensList() {
 		return fOrderedActionsTokens;
 	}
 
@@ -44,7 +44,7 @@ public class Session {
 	}
 
 	public void addAction(Action action) {
-		Long token = action.getStartedEvent().getToken();
+		Object token = action.getStartedEvent().getToken();
 		fActions.put(token, action);
 		fOrderedActionsTokens.add(token);
 		fLastActionToken = token;
@@ -71,6 +71,9 @@ public class Session {
 			break;
 		case Event.EVENT_TYPE_ACTION_OUTPUT:
 			a = getAction(e.getToken());
+			if (a == null) {
+				a = getLastAction();
+			} 
 			if (a != null) {
 				a.addOutput(e);
 			} else {

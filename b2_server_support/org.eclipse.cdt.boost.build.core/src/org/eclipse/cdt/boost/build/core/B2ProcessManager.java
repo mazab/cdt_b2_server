@@ -55,4 +55,14 @@ public class B2ProcessManager {
 		}
 		return null;
 	}
+
+	public static Map<String, Object> getApplicability(IProject project, Map<String, String> properties) {
+		B2Process process = getBuilderProcess(project);
+		Response response = process.invokeRequest(new Request(Request.REQUEST_TYPE_GET_APPLICABILITY, null, properties, "properties"));
+		if (response != null) {
+			Map<String, Object> ret = response.getResponse().get(0);
+			return ret;
+		}
+		return null;
+	}
 }

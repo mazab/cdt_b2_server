@@ -1,0 +1,44 @@
+
+import configure ;
+
+rule check-arithmetic ( properties * )
+{
+    if [ configure.builds /calc/config//64 : $(properties) : 64-bit ] {
+        return <define>USE_64_BIT ;
+    }   
+}
+
+
+#use-project /calc/config : config ;
+#use-project /calc/library : libcalc ;
+
+use-project /calc/calc : calc ;
+
+install dist : /calc/calc : <conditional>@check-arithmetic ;
+
+
+
+#rule deduce-address-model ( properties * )
+#{
+#    local result = [ property.select <address-model> : $(properties) ] ;
+#    if $(result)
+#    {
+#        return $(result) ;     
+#    }
+#    else
+#    {
+#        if [ configure.builds /boost/architecture//32 : $(properties) : 32-bit ]
+#        {
+#            return <address-model>32 ;
+#        }
+#        else if [ 
+#        {
+#            return <address-model>64 ;
+#        }
+#    }
+#}
+
+#rule address-model ( )
+#{
+#    return <conditional>@boostcpp.deduce-address-model ;
+#}

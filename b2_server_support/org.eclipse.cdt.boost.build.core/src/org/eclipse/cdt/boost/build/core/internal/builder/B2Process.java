@@ -14,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.eclipse.cdt.boost.build.core.BoostBuildPlugin;
+import org.eclipse.cdt.boost.build.core.internal.model.Action;
 import org.eclipse.cdt.boost.build.core.internal.model.Event;
 import org.eclipse.cdt.boost.build.core.internal.model.Request;
 import org.eclipse.cdt.boost.build.core.internal.model.Response;
@@ -52,7 +53,7 @@ public class B2Process {
 		if (b2BinPath == null) {
 			String bundleName = BoostBuildPlugin.PLUGIN_ID + "." + Platform.getOS() + "." + Platform.getOSArch();
 			Bundle bundle = Platform.getBundle(bundleName);
-			URL url = FileLocator.find(bundle, new Path("/os/exec/" + getPlatformSpecificB2FileName()), null);
+			URL url = FileLocator.find(bundle, new Path("/os/bin/" + getPlatformSpecificB2FileName()), null);
 			if (url != null) {
 				try {
 					url = FileLocator.resolve(url);
@@ -141,7 +142,15 @@ public class B2Process {
 
 	public Event waitForEvent() {
 		if (fLastSession != null) {
-			Event e = Event.parseEvent(readLine());
+			Event e;
+			// TODO remove after fixing the issue with finish event
+			//Action action  = fLastSession.getLastAction();
+			//if (action != null && action.getFinishedEvent() != null && 
+			//		(action.getStartedEvent().getActionName().contains("link") || action.getFinishedEvent().getExitStatus() != 0)) {
+			//	e = Event.parseEvent("{\"exit-status\": " + action.getFinishedEvent().getExitStatus() + ", \"type\": \"event\", \"event\": \"build-finished\"}");
+			//} else {
+				e = Event.parseEvent(readLine());
+			//}
 			boolean result = fLastSession.handleEvent(e);
 			if (result)
 				return e;

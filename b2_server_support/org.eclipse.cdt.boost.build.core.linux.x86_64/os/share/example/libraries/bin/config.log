@@ -1,0 +1,4 @@
+64.cpp:10:36: error: size of array ‘test’ is negative
+ int test[sizeof(void*) == 9? 1 : -1];
+                                    ^
+...failed updating 1 target...

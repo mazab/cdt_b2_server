@@ -20,6 +20,7 @@ public class Event {
 	public static final String EVENT_TYPE_ACTION_STARTED = "build-action-started";
 	public static final String EVENT_TYPE_ACTION_FINISHED = "build-action-finished";
 	public static final String EVENT_TYPE_ACTION_OUTPUT = "build-action-output";
+	public static final String EVENT_TYPE_MESSAGE = "message";
 	public static final String EVENT_TYPE_FINISHED = "build-finished";
 
 	public static final String PROPERTY_NAME_INCLUDEPATH = "include";
@@ -32,7 +33,7 @@ public class Event {
 	private String fEventType;
 	private String fActionKind;
 	private String fActionName;
-	private Long fToken;
+	private Object fToken;
 	private String fContent;
 	private Long fExitStatus;
 	private Boolean fSuccess;
@@ -48,16 +49,16 @@ public class Event {
 		JSONObject responseObj = (JSONObject) JSONValue.parse(event);
 		if ("event".equals(responseObj.get("type"))) {
 			fEventType = (String) responseObj.get("event");
-			fActionKind = (String) responseObj.get("action-kind");
+			fActionKind = (String) responseObj.get("kind");
 			fActionName = (String) responseObj.get("action-name");
-			Object tmp = responseObj.get("token");
-			if (tmp != null)
-				fToken = (Long) tmp;
-			fContent = (String) responseObj.get("output");
-			tmp = responseObj.get("exit-status");
+			fToken = responseObj.get("token");
+			fContent = (String) responseObj.get("message");
+			if (fContent == null)
+				fContent = (String) responseObj.get("output");
+			Object tmp = responseObj.get("exit-status");
 			if (tmp != null)
 				fExitStatus = (Long) tmp;
-			tmp = responseObj.get("success");
+			tmp = responseObj.get("success");  
 			if (tmp != null)
 				fSuccess = Boolean.parseBoolean(((String) tmp));
 			fSources = (List<String>) responseObj.get("sources");
@@ -92,7 +93,7 @@ public class Event {
 		return fActionName;
 	}
 
-	public Long getToken() {
+	public Object getToken() {
 		return fToken;
 	}
 
@@ -149,16 +150,20 @@ public class Event {
 			sb.append(ACTION_FINISHED_MESSAGE);
 			sb.append("\n");
 			break;
+		case EVENT_TYPE_MESSAGE:
+			sb.append(fContent);
+			sb.append("\n");
+			break;
 		case EVENT_TYPE_FINISHED:
 			sb.append(FINISH_MESSAGE);
 			if (fContent != null) {
 				sb.append(fContent);
 				sb.append("\n");
 			}
-			if (fSuccess != null && !fSuccess.booleanValue()) {
-				sb.append("Build Failed\n");
-			} else {
+			if (fSuccess) {
 				sb.append("Build Succeeded\n");
+			} else {
+				sb.append("Build Failed\n");
 			}
 			break;
 		}

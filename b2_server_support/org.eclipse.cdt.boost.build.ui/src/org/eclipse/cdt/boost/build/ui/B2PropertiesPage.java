@@ -10,6 +10,8 @@ package org.eclipse.cdt.boost.build.ui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.cdt.boost.build.core.B2ProcessManager;
@@ -38,6 +40,7 @@ public class B2PropertiesPage extends PropertyPage implements PropertyChangeList
 
 	private IProject fProject;
 	private Composite fComposite;
+	private Map<String, Combo> fCurrentCategoryOptions = new HashMap<>();
 	private ArrayList<Font> fFontList = new ArrayList<>();
 
 	@Override
@@ -81,28 +84,47 @@ public class B2PropertiesPage extends PropertyPage implements PropertyChangeList
 		opts.setLayout(new GridLayout(2, false));
 		opts.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
+		fCurrentCategoryOptions = new HashMap<>();
 		for (String option : options.getCategoryItems(category)) {
 			final Label lOption = new Label(opts, SWT.NONE);
 			lOption.setText(option);
 			final Combo list = new Combo(opts, SWT.DROP_DOWN | SWT.READ_ONLY);
+			fCurrentCategoryOptions.put(option, list);
 			list.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			Set<String> vals = options.getOptionValues(option);
-			list.setItems(vals.toArray(new String[vals.size()]));
-			String storedVal = getOption(option);
-			if (storedVal != null && vals.contains(storedVal))
-				list.select(list.indexOf(storedVal));
-			else {
-				list.select(0);
-				storeOption(option, list.getText());
-			}
-			list.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					storeOption(lOption.getText(), list.getText());
+			if (options.getOptionApplicability(option)) {
+				Set<String> vals = options.getOptionValues(option);
+				list.setItems(vals.toArray(new String[vals.size()]));
+				String storedVal = getOption(option);
+				if (storedVal != null && vals.contains(storedVal))
+					list.select(list.indexOf(storedVal));
+				else {
+					list.select(0);
+					storeOption(option, list.getText());
 				}
-			});
+				list.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						storeOption(lOption.getText(), list.getText());
+						updateOptionsEnablement(lOption.getText(), list.getText());
+					}
+				});
+			} else {
+				list.setEnabled(false);
+			}
 		}
 		fComposite.layout();
+	}
+
+	private void updateOptionsEnablement(String name, String value) {
+		Map<String, String> arg = new HashMap<>();
+		arg.put(name, value);
+		Map<String, Object> enablement = B2ProcessManager.getApplicability(fProject, arg);
+		for (String opt : enablement.keySet()) {
+			Combo control = fCurrentCategoryOptions.get(opt);
+			boolean enabled = ((Boolean)enablement.get(opt));
+			if (control != null)
+				control.setEnabled(enabled);
+		}
 	}
 
 	private String getOption(String name) {

@@ -15,54 +15,49 @@ import java.util.Map;
 import java.util.Set;
 
 public class Options {
-	public static final String OPTION_NAME = "name";
-	public static final String OPTION_VALUES = "values";
-	public static final String OPTION_CATEGORY = "category";
+	public static final String NAME = "name";
+	public static final String VALUES = "values";
+	public static final String PROPERTIES = "properties";
+	public static final String APPLICABLE = "applicable";
 
 	List<String> fCategories = new ArrayList<>();
 	Map<String, List<String>> fCategoryItems = new HashMap<>();
 	Map<String, Set<String>> fOptionValues = new HashMap<>();
+	Map<String, Boolean> fOptionApplicability = new HashMap<>();
 
-	public Options(List<Map<String, Object>> options) {
-		for (Map<String, Object> option : options) {
-			Object tmp = option.get(OPTION_NAME);
+	public Options(List<Map<String, Object>> categories) {
+		for (Map<String, Object> category : categories) {
+			Object tmp = category.get(NAME);
 			if (tmp != null && tmp instanceof String) {
 				String name = (String) tmp;
-				tmp = option.get(OPTION_CATEGORY);
-				String category;
-				if (tmp != null && tmp instanceof String) {
-					category = (String) tmp;
-				} else {
-					category = getDefaultTarget(name);
-				}
-				if (!fCategories.contains(category))
-					fCategories.add(category);
-				tmp = option.get(OPTION_VALUES);
+				tmp = category.get(PROPERTIES);
 				if (tmp != null && tmp instanceof List) {
-					List<String> values = (List<String>) tmp;
-					if (!fCategoryItems.containsKey(category)) {
-						fCategoryItems.put(category, new ArrayList<String>());
+					List options = (List) tmp;
+					ArrayList<String> categoryOpts = new ArrayList<String>();
+					fCategories.add(name);
+					fCategoryItems.put(name, categoryOpts);
+					for (Object option : options) {
+						Map<String, Object> optMap = (Map<String, Object>) option;
+						tmp = optMap.get(NAME);
+						if (tmp != null && tmp instanceof String) {
+							String optName = (String) tmp;
+							tmp = optMap.get(APPLICABLE);
+							boolean applicable = true;
+							if (tmp != null && tmp instanceof Boolean) {
+								applicable = ((Boolean) tmp).booleanValue();
+							}
+							fOptionApplicability.put(optName, applicable);
+							tmp = optMap.get(VALUES);
+							if (tmp != null && tmp instanceof List) {
+								List values = (List) tmp;
+								categoryOpts.add(optName);
+								fOptionValues.put(optName, new HashSet<String>(values));
+							}
+						}
 					}
-					fCategoryItems.get(category).add(name);
-					fOptionValues.put(name, new HashSet<String>(values));
 				}
 			}
 		}
-	}
-
-	private String getDefaultTarget(String optionName) {
-		switch (optionName) {
-		case "variant":
-		case "toolset":
-		case "target-os":
-		case "architecture":
-			return "General Settings";
-		case "optimization":
-			return "Compiler Settings";
-		case "link":
-			return "Linker Settings";
-		}
-		return "";
 	}
 
 	public List<String> getCategories() {
@@ -75,5 +70,9 @@ public class Options {
 
 	public Set<String> getOptionValues(String option) {
 		return fOptionValues.get(option);
+	}
+
+	public Boolean getOptionApplicability(String option) {
+		return fOptionApplicability.get(option);
 	}
 }
